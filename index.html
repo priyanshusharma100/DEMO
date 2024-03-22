@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Manager</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Task Manager</h1>
+    <input type="text" id="taskInput" placeholder="Add a new task...">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+<style>
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+    margin-left: 5px;
+}
+</style>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+
+    // Load tasks from local storage on page load
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // Function to render tasks
+    function renderTasks() {
+        taskList.innerHTML = '';
+        tasks.forEach((task, index) => {
+            const taskItem = document.createElement('li');
+            taskItem.innerHTML = `
+                <span class="${task.completed ? 'completed' : ''}">${task.title}</span>
+                <button onclick="toggleCompletion(${index})">${task.completed ? 'Undo' : 'Done'}</button>
+                <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+            `;
+            taskList.appendChild(taskItem);
+        });
+    }
+
+    // Function to add a new task
+    function addTask() {
+        const title = taskInput.value.trim();
+        if (title !== '') {
+            tasks.push({ title, completed: false });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            taskInput.value = '';
+            renderTasks();
+        }
+    }
+
+    // Function to toggle task completion
+    function toggleCompletion(index) {
+        tasks[index].completed = !tasks[index].completed;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+    }
+
+    // Function to delete a task
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+    }
+
+    // Initial rendering of tasks
+    renderTasks();
+});
+  </script>
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+      }
+
+      .container {
+          max-width: 600px;
+          margin: 20px auto;
+          padding: 20px;
+          background-color: #f9f9f9;
+          border-radius: 5px;
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+          margin-bottom: 20px;
+      }
+
+      label {
+          font-weight: bold;
+      }
+
+      input[type="text"] {
+          width: 100%;
+          padding: 8px;
+          border-radius: 3px;
+          border: 1px solid #ccc;
+      }
+
+      .btn-group {
+          margin-top: 20px;
+      }
+
+      .btn {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+      }
+
+      .btn-primary {
+          background-color: #007bff;
+          color: #fff;
+      }
+
+      .btn-danger {
+          background-color: #dc3545;
+          color: #fff;
+      }
+  </style>
+  </head>
+  <body>
+
+  <div class="container">
+      <h2>Task Manager</h2>
+      <form id="taskForm">
+          <div class="form-group">
+              <label for="gmail">Gmail:</label>
+              <input type="text" id="gmail" name="gmail" required>
+          </div>
+          <div class="form-group">
+              <label for="contact">Contact:</label>
+              <input type="text" id="contact" name="contact" required>
+          </div>
+          <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name" required>
+          </div>
+          <div class="btn-group">
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="button" class="btn btn-danger" onclick="deleteTask()">Delete</button>
+              <button type="button" class="btn btn-primary" onclick="completeTask()">Complete</button>
+              <button type="button" class="btn btn-primary" onclick="resetForm()">Reset</button>
+          </div>
+      </form>
+
+      <h3>Tasks</h3>
+      <ul id="taskList"></ul>
+      <button type="button" class="btn btn-primary" onclick="addTask()">Add Task</button>
+  </div>
+
+  <script>
+      const taskForm = document.getElementById('taskForm');
+      const taskList = document.getElementById('taskList');
+
+      taskForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          const gmail = document.getElementById('gmail').value;
+          const contact = document.getElementById('contact').value;
+          const name = document.getElementById('name').value;
+
+          if (gmail.trim() === '' || contact.trim() === '' || name.trim() === '') {
+              alert('Please fill in all fields');
+              return;
+          }
+
+          const taskItem = document.createElement('li');
+          taskItem.innerHTML = `
+              <strong>Gmail:</strong> ${gmail} - <strong>Contact:</strong> ${contact} - <strong>Name:</strong> ${name}
+          `;
+          taskList.appendChild(taskItem);
+
+          taskForm.reset();
+      });
+
+      function deleteTask() {
+          if (confirm('Are you sure you want to delete this task?')) {
+              const selectedTask = taskList.querySelector('li:last-child');
+              taskList.removeChild(selectedTask);
+          }
+      }
+
+      function completeTask() {
+          const selectedTask = taskList.querySelector('li:last-child');
+          selectedTask.style.textDecoration = 'line-through';
+      }
+
+      function resetForm() {
+          taskForm.reset();
+      }
+
+      function addTask() {
+          taskForm.reset();
+      }
+  </script>
+
+  </body>
+  </html>
